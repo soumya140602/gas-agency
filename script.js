@@ -2,33 +2,26 @@
 let menu = document.querySelector('#menu-btn');
 let navbar = document.querySelector('.navbar');
 
+console.log(window);
+
 /*
 menu.onclick = () =>{
     menu.classList.toggle('fa-times');
    navbar.classList.toggle('active');
-}*/
-
+}
 window.onscroll = () =>{
     menu.classList.remove('fa-times');
     navbar.classList.remove('active');
-}
+}*/
 
 let captcha="";
 function generate() {
-
-    // Clear old input
-    
-
-    // Access the element to store
-    // the generated captcha
     const captchaElement = document.getElementById("image");
     let uniquechar = "";
 
     const randomchar =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    // Generate captcha for length of
-    // 5 with random character
     for (let i = 1; i < 5; i++) {
         uniquechar += randomchar.charAt(
             Math.random() * randomchar.length)
@@ -40,12 +33,13 @@ function generate() {
 
 }
 function printmsg() {
-    const usr_input = document
-        .getElementById("captchaInput").value;
+    const usr_input = document.getElementById("captchaInput").value;
+
+    const captchaElement = document.getElementById("image");
 
     // Check whether the input is equal
     // to generated captcha or not
-    if (usr_input == captcha.innerHTML) {
+    if (usr_input == captchaElement.innerHTML) {
         let s = document.getElementById("key")
             .innerHTML = "Matched";
         generate();
@@ -56,9 +50,16 @@ function printmsg() {
         generate();
     }
 }
+
 window.onload = function() {
     generate();
 }
+
+
+
+fetch('http://localhost:9090/user/getusers');
+
+
 
 
 function foo() {
@@ -66,69 +67,49 @@ function foo() {
     return true;
  }
  
-  /*function login(form){
-    fetch('http://localhost:9090/user/getusers').then(response=>response.json()
-    .then(obj=>response.contains(form.email.value).then(res=>console.log(res))));
-    let flag=false;
-    for(let i = 0; i < this.response.length; i++){
-        if((this.response[i][0] === form.username.value )&& (this.response[i][1]=== form.password.value)){
-            flag=true;
-          console.log(this.response);
-        }
-    }
-    if(flag===true)
-    {
-        console.log(response);
-        self.location.href="User_dashboard.html";
-    }
-    /*
-    let response=fetch('http://localhost:9090/user/getusers');
+  //async function login(form){
+   /*
+   const response = await fetch('http://localhost:9090/user/getusers');
+   const users=await response.json();
+   console.log(users);
+
 
     if((form.email.value === "test@gmail.com") && (form.password.value === "test")){
        
-        console.log(response);
-      self.location.href = "User_dashboard.html";
+        self.location.href = "User_dashboard.html";
       }
      else{
         alert(" OOPs !! Incorrect email id and password");
         return false;
       }
-  }*/
-      async function login(form) {
-        try {
-            // Fetch data from the server
-            //const response = await fetch('http://localhost:9090/user/getusers');
-            const response = await fetch('http://localhost:9090/user/getusers');
-
-            const users = await response.json(); // Parse JSON response
-            
-            // Check if user exists
-            let flag = false;
-            /*for (let user of users) { // Adjust this loop based on the structure of 'users'
-                if (user.email === form.email.value && user.password === form.password.value) {
-                    flag = true;
-                    console.log("User found:", user);
-                    break;
-                }
-            }*/
+    }*/
     
-            // Redirect or show error
-            if (flag) {
-                console.log("Login successful!");
-                foo();
-                self.location.href = "User_dashboard.html";
-            } else {
-                alert("Oops! Incorrect email id or password.");
-                return false;
-            }
-        } catch (error) {
-            console.error("Error fetching user data:", error.message);
-            alert("Something went wrong. Please try again later.");
-            return false;
+async function login(form)
+{
+    const response = await fetch('http://localhost:9090/user/getusers');
+   const users=await response.json();
+   console.log(users);
+    let email=form.email.value;
+    let password=form.password.value;
+
+    let flag = false;
+    for (let u of users) {
+        if (u.email === email.toLowerCase() && u.password === password) {
+            flag = true;
+            console.log("User found:", u);
+            break;
         }
     }
-    
-  function admin_login(form){
+    if(flag==true)
+    {
+        console.log("found");
+        self.location.href = "User_dashboard.html";
+    }
+    else
+    alert("username or password not same");
+}
+
+function admin_login(form){
     if((form.email.value == "admin@gmail.com") && (form.password.value == "admin")){
       self.location.href = "Admin_dashboard.html";
       }
@@ -151,6 +132,7 @@ allSideMenu.forEach(item=> {
 });
 
 // TOGGLE SIDEBAR
+
 
 const menuBar = document.querySelector('#content nav .bx.bx-menu');
 const sidebar = document.getElementById('sidebar');
@@ -201,18 +183,3 @@ switchMode.addEventListener('change', function () {
 		document.body.classList.remove('dark');
 	}
 })
-/*
-const userdetail=async()=>{
-    let response=await fetch('http://localhost:9090/user/getusers');
-    console.log(response);
-}
-    
-lead.addEventListener('click',userdetail);
-
-window.addEventListener("DOMContentLoaded", (event) => {
-    const user = document.getElementById('#submit');
-    if (user) {
-      user.addEventListener('click', userdetail, false);
-    }
-});*/
-
